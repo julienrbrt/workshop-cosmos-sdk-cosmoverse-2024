@@ -30,6 +30,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 
 	"github.com/cosmosregistry/chain-minimal/app"
+	customaccountdepinject "github.com/cosmosregistry/chain-minimal/customaccounts/depinject"
 )
 
 // NewRootCmd creates a new root command for minid. It is called once in the
@@ -53,6 +54,7 @@ func NewRootCmd() *cobra.Command {
 				multisigdepinject.ProvideAccount,
 				basedepinject.ProvideAccount,
 				lockupdepinject.ProvideAllLockupAccounts,
+				customaccountdepinject.ProvideAccount,
 				// provide base account options
 				basedepinject.ProvideSecp256K1PubKey,
 			),

@@ -37,6 +37,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	_ "github.com/cosmos/cosmos-sdk/x/auth"           // import for side-effects
 	_ "github.com/cosmos/cosmos-sdk/x/auth/tx/config" // import for side-effects
+
+	customaccountdepinject "github.com/cosmosregistry/chain-minimal/customaccounts/depinject"
 )
 
 // DefaultNodeHome default home directories for the application daemon
@@ -110,6 +112,7 @@ func NewMiniApp(
 				multisigdepinject.ProvideAccount,
 				basedepinject.ProvideAccount,
 				lockupdepinject.ProvideAllLockupAccounts,
+				customaccountdepinject.ProvideAccount,
 
 				// provide base account options
 				basedepinject.ProvideSecp256K1PubKey,

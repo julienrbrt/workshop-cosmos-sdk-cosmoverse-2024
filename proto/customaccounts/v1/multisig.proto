@@ -74,14 +74,6 @@ message QueryPendingTxs {
 }
 
 message QueryPendingTxsResponse {
-  message PendingTx {
-    uint64 transaction_id = 1;
-    google.protobuf.Any transaction = 2;
-    repeated string approvals = 3;
-    uint64 submitted_at_block = 4;
-    uint64 expires_at_block = 5;
-    string initiated_by = 6 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  }
   repeated PendingTx transactions = 1;
 }
 
@@ -92,4 +84,15 @@ message QueryConfigResponse {
   repeated string signers = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   uint64 signing_window = 2;
   uint64 required_signers = 3;
+}
+
+// State
+
+message PendingTx {
+  uint64 transaction_id = 1;
+  google.protobuf.Any transaction = 2;
+  repeated string approvals = 3;
+  uint64 submitted_at_block = 4;
+  uint64 expires_at_block = 5;
+  string initiated_by = 6 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
