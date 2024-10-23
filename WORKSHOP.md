@@ -1,5 +1,7 @@
 # Workshop
 
+## [Slides](https://docs.google.com/presentation/d/1NrQ5XUlYYFCoWPMSaK_qbZ4aLvUZJwGnvwwgq6Qrnr8/edit?usp=sharing)
+
 ## Introduction
 
 Cosmos SDK v0.52+ introduces the new x/accounts module.
