@@ -13,7 +13,10 @@ import (
 
 	_ "cosmossdk.io/api/cosmos/tx/config/v1" // import for side-effects
 	clienthelpers "cosmossdk.io/client/v2/helpers"
-	_ "cosmossdk.io/x/accounts"     // import for side-effects
+	_ "cosmossdk.io/x/accounts" // import for side-effects
+	basedepinject "cosmossdk.io/x/accounts/defaults/base/depinject"
+	lockupdepinject "cosmossdk.io/x/accounts/defaults/lockup/depinject"
+	multisigdepinject "cosmossdk.io/x/accounts/defaults/multisig/depinject"
 	_ "cosmossdk.io/x/bank"         // import for side-effects
 	_ "cosmossdk.io/x/consensus"    // import for side-effects
 	_ "cosmossdk.io/x/distribution" // import for side-effects
@@ -101,6 +104,15 @@ func NewMiniApp(
 			depinject.Supply(
 				logger,
 				appOpts,
+			),
+			depinject.Provide(
+				// inject desired account types:
+				multisigdepinject.ProvideAccount,
+				basedepinject.ProvideAccount,
+				lockupdepinject.ProvideAllLockupAccounts,
+
+				// provide base account options
+				basedepinject.ProvideSecp256K1PubKey,
 			),
 		),
 		&appBuilder,

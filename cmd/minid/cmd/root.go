@@ -14,6 +14,9 @@ import (
 	"cosmossdk.io/core/registry"
 	"cosmossdk.io/depinject"
 	"cosmossdk.io/log"
+	basedepinject "cosmossdk.io/x/accounts/defaults/base/depinject"
+	lockupdepinject "cosmossdk.io/x/accounts/defaults/lockup/depinject"
+	multisigdepinject "cosmossdk.io/x/accounts/defaults/multisig/depinject"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/config"
@@ -39,12 +42,19 @@ func NewRootCmd() *cobra.Command {
 	)
 
 	if err := depinject.Inject(
-		depinject.Configs(app.AppConfig(),
+		depinject.Configs(
+			app.AppConfig(),
 			depinject.Supply(
 				log.NewNopLogger(),
 			),
 			depinject.Provide(
 				ProvideClientContext,
+				// inject desired account types:
+				multisigdepinject.ProvideAccount,
+				basedepinject.ProvideAccount,
+				lockupdepinject.ProvideAllLockupAccounts,
+				// provide base account options
+				basedepinject.ProvideSecp256K1PubKey,
 			),
 		),
 		&autoCliOpts,

@@ -1,0 +1,95 @@
+syntax = "proto3";
+package customaccounts.v1;
+
+import "cosmos_proto/cosmos.proto";
+import "google/protobuf/any.proto";
+
+option go_package = "github.com/cosmosregistry/chain-minimal/customaccounts/types";
+
+// Init message to create the multisig account
+message MsgInit {
+  // sender is who's creating the multisig account
+  string sender = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // signers are the addresses that can sign transactions
+  repeated string signers = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // signing_window is number of blocks to wait for signatures (default 20)
+  uint64 signing_window = 3;
+}
+
+message MsgInitResponse {}
+
+// Submit a new transaction to be signed
+message MsgSubmitTx {
+  // sender must be one of the signers
+  string sender = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // transaction to be executed once all signatures are collected
+  google.protobuf.Any transaction = 2;
+}
+
+message MsgSubmitTxResponse {
+  // ID of the submitted transaction
+  uint64 transaction_id = 1;
+}
+
+// Approve a pending transaction
+message MsgApproveTx {
+  // sender must be one of the signers
+  string sender = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // ID of transaction to approve
+  uint64 transaction_id = 2;
+}
+
+message MsgApproveTxResponse {
+  // whether the transaction was executed (received all signatures)
+  bool executed = 1;
+  // whether the transaction was executed but failed (execution error)
+  bool failed = 2;
+}
+
+// Query state
+
+// Query a pending transaction
+message QueryPendingTx {
+  uint64 transaction_id = 1;
+}
+
+message QueryPendingTxResponse {
+  // The transaction waiting for signatures
+  google.protobuf.Any transaction = 1;
+  // Addresses that have approved so far
+  repeated string approvals = 2;
+  // Block height when submitted
+  uint64 submitted_at_block = 3;
+  // Block height when expires
+  uint64 expires_at_block = 4;
+  // Address that initiated the transaction
+  string initiated_by = 5 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// Query all pending transactions
+message QueryPendingTxs {
+  // pagination
+  uint64 offset = 1;
+  uint64 limit = 2;
+}
+
+message QueryPendingTxsResponse {
+  message PendingTx {
+    uint64 transaction_id = 1;
+    google.protobuf.Any transaction = 2;
+    repeated string approvals = 3;
+    uint64 submitted_at_block = 4;
+    uint64 expires_at_block = 5;
+    string initiated_by = 6 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  }
+  repeated PendingTx transactions = 1;
+}
+
+// Query account configuration
+message QueryConfig {}
+
+message QueryConfigResponse {
+  repeated string signers = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  uint64 signing_window = 2;
+  uint64 required_signers = 3;
+}
