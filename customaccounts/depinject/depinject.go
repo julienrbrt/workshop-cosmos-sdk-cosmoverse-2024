@@ -7,5 +7,5 @@ import (
 )
 
 func ProvideAccount() accountstd.DepinjectAccount {
-	return accountstd.DIAccount("mutisigcosmoverse", customaccounts.NewAccount)
+	return accountstd.DIAccount("multisigcosmoverse", customaccounts.NewAccount)
 }
